@@ -4,18 +4,18 @@ const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const cloudinary = require("cloudinary").v2;
 
-// cloudinary.config({
-//     cloud_name: 'dcdcmeuhe',
-//     api_key: '289757566492112',
-//     api_secret: 'gMcmtirQpK70rnabNVTsXH99hZw',
-//     secure: true
-//   });
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-  secure: true,
-});
+    cloud_name: 'dcdcmeuhe',
+    api_key: '289757566492112',
+    api_secret: 'gMcmtirQpK70rnabNVTsXH99hZw',
+    secure: true
+  });
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+//   secure: true,
+// });
 
 //add category
 exports.addCategory = catchAsyncError(async (req, res, next) => {
