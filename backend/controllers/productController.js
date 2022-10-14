@@ -4,19 +4,19 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const ApiFeatures = require("../utils/apiFeatures");
 const cloudinary = require("cloudinary").v2;
 
-// cloudinary.config({
-//   cloud_name: "dcdcmeuhe",
-//   api_key: "289757566492112",
-//   api_secret: "gMcmtirQpK70rnabNVTsXH99hZw",
-//   secure: true,
-// });
-
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: "dcdcmeuhe",
+  api_key: "289757566492112",
+  api_secret: "gMcmtirQpK70rnabNVTsXH99hZw",
   secure: true,
 });
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+//   secure: true,
+// });
 
 //create product
 exports.createProduct = catchAsyncError(async (req, res, next) => {
@@ -50,23 +50,13 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
         console.log(err);
       });
   });
-
-  //const product = await Product.create(req.body);
-
-  //   res.status(201).json({
-  //     success: true,
-  //     product: product,
-  //   });
 });
 
 exports.getAllProducts = catchAsyncError(async (req, res) => {
-  // console.log('jjjjj',req.query)
-  // console.log('jjjjj',Product.find())
 
-  const resultPerPage = 5;
   const productCount = await Product.countDocuments();
 
-  const apiFeature = new ApiFeatures(Product.find(), req.query).search(); //.filter().pagination(resultPerPage);
+  const apiFeature = new ApiFeatures(Product.find(), req.query).search();
   const products = await apiFeature.query;
   res.status(200).json({
     success: true,
@@ -75,19 +65,6 @@ exports.getAllProducts = catchAsyncError(async (req, res) => {
   });
 });
 
-// exports.searchProduct = catchAsyncError(async (req, res) => {
-
-//   const resultPerPage = 5;
-//   const productCount = await Product.countDocuments();
-
-//   const apiFeature = new ApiFeatures(Product.find(), req.query); //.search().filter().pagination(resultPerPage);
-//   const products = await apiFeature.query;
-//   res.status(200).json({
-//     success: true,
-//     products,
-//     productCount,
-//   });
-// });
 
 //update product
 exports.updateProduct = catchAsyncError(async (req, res, next) => {
@@ -130,21 +107,17 @@ exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 exports.getProductDetails = catchAsyncError(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
-  // if(!product){
-  //     return res.status(500).json({
-  //         success:false,
-  //         message:"Product Not Found"
-  // })
   if (!product) {
     return next(new ErrorHander("Product Not Found", 404));
   }
-  //await product.remove();
-
   res.status(200).json({
     success: true,
     product,
   });
 });
+
+
+
 
 //create new review or update the review
 exports.createProductReview = catchAsyncError(async (req, res, next) => {

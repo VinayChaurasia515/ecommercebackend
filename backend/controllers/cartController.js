@@ -100,11 +100,7 @@ exports.addToCart = catchAsyncError(async (req, res, next) => {
 
 //View Cart
 exports.viewCart = catchAsyncError(async (req, res, next) => {
-  //req.body.user=req.user.id;
-  //console.log("req.user//// :: ", req.user);
-  //let TotalCart=[];
   const Carts = await Cart.findOne({ userId: req.user._id });
-  //console.log("Carts :: ",Carts.cartItems);
   let items = Carts.cartItems;
   console.log("items :: ", items);
   //Carts.cartItems
@@ -114,23 +110,12 @@ exports.viewCart = catchAsyncError(async (req, res, next) => {
     let pro = await Product.findById(item.productId);
     console.log("product :: ", pro.name);
     console.log("product :: ", pro.images.url);
-    console.log("===================");
-    // let obj={
-    //   productName:pro.name,
-    //   productUrl:pro.images.url
-    // }
-    // console.log("TotalCart.push(obj) ",TotalCart.push(obj));
+    
   });
-  // (let item in Carts.cartItems ){
-  //   console.log("item :: ",item);
-  //   console.log("===================");
 
-  // }
-  //console.log("TotalCart :::",TotalCart);
   res.status(200).json({
     success: true,
     Carts,
-    //TotalCart
   });
 });
 
@@ -152,7 +137,7 @@ exports.removeCartItems = catchAsyncError(async (req, res, next) => {
       {
         $inc: {
           "cartItems.$.quantity": -1,
-          "totalPrice":-checkquantity[0].price
+          totalPrice: -checkquantity[0].price,
         },
       }
     )
@@ -174,7 +159,7 @@ exports.removeCartItems = catchAsyncError(async (req, res, next) => {
       { userId: req.user._id },
       {
         $inc: {
-          "totalPrice":-checkquantity[0].price
+          totalPrice: -checkquantity[0].price,
         },
         $pull: {
           cartItems: {
@@ -183,12 +168,6 @@ exports.removeCartItems = catchAsyncError(async (req, res, next) => {
         },
       }
     )
-      // .exec((error, result) => {
-      //   if (error) return res.status(400).json({ error });
-      //   if (result) {
-      //     res.status(202).json({ result });
-      //   }
-      // });
       .then((result) => {
         console.log(" result  :: ", result);
         res.status(200).json({

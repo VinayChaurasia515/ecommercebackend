@@ -24,8 +24,11 @@ const orderSchema = new mongoose.Schema({
         ref: "Product",
         required: true,
       },
-      courierStatus: { type: String, required: true, default: "Your Order has been placed." },
-     // deliveredAt: { type: Date, required: true },
+      courierStatus: {
+        type: String,
+        required: true,
+        default: "Your Order has been placed.",
+      },
     },
   ],
   user: {
@@ -40,17 +43,11 @@ const orderSchema = new mongoose.Schema({
     // COD:{
 
     // },
-
+    paymentOption: { type: String, required: true },
     id: { type: String, required: true },
     status: { type: String, required: true },
   },
-  //paidAt: { type: Date, required: true },
-  //itemsPrice: { type: Number, default: 0, required: true },
-  //taxPrice: { type: Number, default: 0, required: true },
-  //shippingPrice: { type: Number, default: 0, required: true },
   totalPrice: { type: Number, default: 0, required: true },
-  // orderStatus: { type: String, default: "Processing", required: true },
-  // deliveredAt: Date,
   createdAt: {
     type: Date,
     default: Date.now,

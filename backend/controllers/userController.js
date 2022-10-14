@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail.js");
 const crypto = require("crypto");
+
 //Register a user
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   console.log("Vinay");
@@ -18,11 +19,10 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
       url: "profileurl",
     },
   });
-  ///////
+
   const token = user.getJWTToken();
   res.status(201).json({
     success: true,
-    //  user,
     token,
   });
   sendToken(user, 201, res);
@@ -80,6 +80,7 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   console.log(">>>>>>", req.body);
   const user = await User.findOne({ email: req.body.email });
+  console.log("User ", user);
   if (!user) {
     return next(new ErrorHander("User no found", 404));
   }
@@ -88,11 +89,9 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   console.log("resetToken ===>>>  ", resetToken);
   await user.save({ validateBeforeSave: false });
 
-  //const resetPasswordUrl = `http://localhost:8080/resetpassword/${resetToken}`;
+  const resetPasswordUrl = `http://localhost:8080/resetpassword/${resetToken}`;
   // const resetPasswordUrl=`http://localhost:3030/user/password/reset/${resetToken}`;
-  const resetPasswordUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/user/password/reset/${resetToken}`;
+  //const resetPasswordUrl = `${req.protocol}://${req.get("host")}/user/password/reset/${resetToken}`;
 
   const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\n If you have not requested this email then, please ignore it`;
   console.log(message);
@@ -122,6 +121,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
       new ErrorHander("Password does not matched with Confirm Password", 400)
     );
   }
+  console.log("req.params.token ", req.params.token);
   //creating token hash
   const resetPassswordToken = crypto
     .createHash("sha256")
@@ -129,9 +129,6 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     .digest("hex");
 
   console.log("resetPassswordToken ::", resetPassswordToken);
-  //  console.log("resetPassswordExpire ::", Date.now());
-  //resetPassswordExpire: { $gt: Date.now() },
-  //1b607fe9786bd411742697469e5c47c9c74c96eaa54d557f2c1922971d563a27
 
   const user = await User.findOne({
     resetPassswordToken,
@@ -158,6 +155,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
 //get User Details
 exports.getUserDetails = catchAsyncError(async (req, res, next) => {
+  console.log("req.user.id", req.user.id);
   const user = await User.findById(req.user.id);
 
   res.status(200).json({
@@ -206,6 +204,7 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
+    newUserData,
   });
 });
 
@@ -235,43 +234,43 @@ exports.getSingleUser = catchAsyncError(async (req, res, next) => {
 });
 
 //update User (admin)
-exports.updateUserRole = catchAsyncError(async (req, res, next) => {
-  console.log("email ::", req.body);
-  const userData = {
-    name: req.body.name,
-    email: req.body.email,
-    role: req.body.role,
-  };
-  console.log("Admin Update User Data ::", userData);
-  console.log("Admin Update this Id data ::", req.params.id);
+// exports.updateUserRole = catchAsyncError(async (req, res, next) => {
+//   console.log("email ::", req.body);
+//   const userData = {
+//     name: req.body.name,
+//     email: req.body.email,
+//     role: req.body.role,
+//   };
+//   console.log("Admin Update User Data ::", userData);
+//   console.log("Admin Update this Id data ::", req.params.id);
 
-  //we will add cloudinary later
-  const user = await User.findByIdAndUpdate(req.params.id, userData, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
+//   //we will add cloudinary later
+//   const user = await User.findByIdAndUpdate(req.params.id, userData, {
+//     new: true,
+//     runValidators: true,
+//     useFindAndModify: false,
+//   });
 
-  res.status(200).json({
-    success: true,
-    message: "User Updated Successfully",
-  });
-});
+//   res.status(200).json({
+//     success: true,
+//     message: "User Updated Successfully",
+//   });
+// });
 
 //Delete User (admin)
-exports.deleteUser = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+// exports.deleteUser = catchAsyncError(async (req, res, next) => {
+//   const user = await User.findById(req.params.id);
 
-  if (!user) {
-    return next(
-      new ErrorHander(`User does not exist with id ${req.params.id}`, 404)
-    );
-  }
+//   if (!user) {
+//     return next(
+//       new ErrorHander(`User does not exist with id ${req.params.id}`, 404)
+//     );
+//   }
 
-  await user.remove();
+//   await user.remove();
 
-  res.status(200).json({
-    success: true,
-    message: "User Deleted Successfully",
-  });
-});
+//   res.status(200).json({
+//     success: true,
+//     message: "User Deleted Successfully",
+//   });
+// });

@@ -24,9 +24,6 @@ exports.addCategory = catchAsyncError(async (req, res, next) => {
   console.log(file);
 
   cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
-    // if(err){
-    //     console.log("Error ",err);
-    // }
     console.log("XXX ", result);
     const category = new Category({
       categoryName: req.body.categoryName,
