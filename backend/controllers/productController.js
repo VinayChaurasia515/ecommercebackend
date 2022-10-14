@@ -4,19 +4,13 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const ApiFeatures = require("../utils/apiFeatures");
 const cloudinary = require("cloudinary").v2;
 
+
 cloudinary.config({
-  cloud_name: "dcdcmeuhe",
-  api_key: "289757566492112",
-  api_secret: "gMcmtirQpK70rnabNVTsXH99hZw",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
   secure: true,
 });
-
-// cloudinary.config({
-//   cloud_name: process.env.CLOUD_NAME,
-//   api_key: process.env.API_KEY,
-//   api_secret: process.env.API_SECRET,
-//   secure: true,
-// });
 
 //create product
 exports.createProduct = catchAsyncError(async (req, res, next) => {
