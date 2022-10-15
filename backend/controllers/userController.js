@@ -84,6 +84,8 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHander("User no found", 404));
   }
+
+  console.log("process.env.FRONTEND_URL :: ",process.env.FRONTEND_URL);
   //get reset password token
   const resetToken = user.getResetPasswordToken();
   console.log("resetToken ===>>>  ", resetToken);
